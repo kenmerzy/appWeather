@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text } from 'react-native'
 import axios from 'axios'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const MainScreen = () => {
+const MainScreen = (props) => {
+  console.tron.log({ navigation: props.navigation })
+  const { navigation } = props
   const [weather, setWeather] = useState(false)
 
+  const navigateToSettingScreen = () => {
+    navigation.navigate('SettingScreen')
+  }
   // eslint-disable-next-line react/sort-comp
 
   useEffect(() => {
@@ -22,9 +28,17 @@ const MainScreen = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>
-        {weather?.clouds?.all}
+      <Text style={{ fontSize: 20 }}>
+        {weather?.main?.temp}
       </Text>
+
+      <View style={{ marginTop: 20 }}>
+        <TouchableOpacity
+          onPress={navigateToSettingScreen}
+        >
+          <Text> Navigate to SettingScreen</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
