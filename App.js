@@ -13,7 +13,7 @@ const SettingScreen = (props) => {
   return (
 
     <View style={{
-      flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'red',
+      flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'orange',
     }}
     >
       <Text> Setting Screen</Text>
