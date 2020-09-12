@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import {
   View, Text, Dimensions,
-  Image, SafeAreaView, ImageBackground, Swiper, StyleSheet,
+  Image, SafeAreaView, StyleSheet,
 } from 'react-native'
 import axios from 'axios'
+import moment from 'moment'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import {
   iconSearch, iconSetting, backgroundSnowing, iconSnowing,
@@ -35,38 +36,21 @@ const MainScreen = (props) => {
   }
 
   return (
-    // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    //   <Text style={{ fontSize: 20 }}>
-    //     {weather?.main?.temp}
-    //   </Text>
 
-    //   <View style={{ marginTop: 20 }}>
-    //     <TouchableOpacity
-    //       onPress={navigateToSettingScreen}
-    //     >
-    //       <Text> Navigate to SettingScreen</Text>
-    //     </TouchableOpacity>
-    //   </View>
-    // </View>
-
-    <View style={{ flex: 1, paddingHorizontal: 34 }}>
+    <View style={styles.container}>
       <Image
         source={backgroundSnowing}
-        style={{
-          flex: 1,
-          width,
-          height,
-          resizeMode: 'cover',
-          justifyContent: 'center',
-          position: 'absolute',
-        }}
+        style={styles.background}
+
       />
 
       <SafeAreaView />
       <View style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingTop: 29,
+        paddingTop: 29 * width / 375,
+        paddingBottom: 10 * width / 375,
+        paddingHorizontal: 34 * width / 375,
       }}
       >
         <View>
@@ -99,65 +83,86 @@ const MainScreen = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+      >
         <View style={{
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          borderBottomColor: '#998383',
-          paddingBottom: 52,
+          paddingBottom: 52 * width / 375,
         }}
         >
 
           <Text style={{
             fontFamily: 'Gilroy-Bold',
-            fontSize: 36,
+            fontSize: 36 * width / 375,
             color: '#FFFFFF',
-            marginTop: 28,
+            marginTop: 18 * width / 375,
+            paddingHorizontal: 34 * width / 375,
+
           }}
           >
             Ho Chi Minh City
           </Text>
           <Text style={{
             fontFamily: 'Gilroy-Bold',
-            fontSize: 18,
+            fontSize: 18 * width / 375,
             color: '#FFFFFF',
-            marginTop: 8,
-          }}
-          >
-            10:30 am - Monday,01 Dec 2020
-          </Text>
-          <Text style={{
-            fontFamily: 'Gilroy-Bold',
-            fontSize: 96,
-            color: '#FFFFFF',
-            marginTop: 120,
+            marginTop: 8 * width / 375,
+            paddingHorizontal: 34 * width / 375,
 
           }}
           >
-            32 *
+            {moment().format('LT - ddd, DD MMM yyyy')}
+          </Text>
+          <Text style={{
+            fontFamily: 'Gilroy-Bold',
+            fontSize: 96 * width / 375,
+            color: '#FFFFFF',
+            marginTop: 120 * width / 375,
+            paddingHorizontal: 34 * width / 375,
+
+          }}
+          >
+            {`${weather?.main?.temp} *`}
+
           </Text>
           <View style={{
             flexDirection: 'row',
             alignItems: 'center',
+            marginTop: 28 * width / 375,
+            paddingHorizontal: 34 * width / 375,
+
           }}
           >
             <Image
-              source={iconSnowing}
+              source={{ uri: `http://openweathermap.org/img/wn/${weather?.weather[0]?.icon}@2x.png` }}
               style={{
-                width: 34,
-                height: 38,
+                width: 34 * width / 375,
+                height: 38 * width / 375,
               }}
               resizeMode="contain"
             />
             <Text style={{
               fontFamily: 'Gilroy-Bold',
-              fontSize: 24,
               color: '#FFFFFF',
-              marginTop: 28,
-
+              fontSize: 24 * width / 375,
+              marginLeft: 6 * width / 375,
             }}
             >
-              Snowing
+              {`${weather?.weather[0]?.main}`}
             </Text>
+
+          </View>
+          <View
+            style={separator}
+          />
+
+          <View>
+            <ScrollView>
+              <View>
+
+              </View>
+
+            </ScrollView>
           </View>
         </View>
       </ScrollView>
@@ -165,4 +170,22 @@ const MainScreen = (props) => {
 
   )
 }
+
 export default MainScreen
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  background: {
+    width,
+    height,
+    position: 'absolute',
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: 28 * width / 375,
+    backgroundColor: '#998383',
+    marginTop: 52 * width / 375
+  }
+})
