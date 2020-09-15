@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import {
   iconSearch, iconSetting, backgroundSnowing,
 } from '../../assets/images'
+import Timer from '../components/Timer'
 
 const { width, height } = Dimensions.get('window')
 
@@ -128,17 +129,9 @@ const MainScreen = (props) => {
           >
             {`${weather?.name}`}
           </Text>
-          <Text style={{
-            fontFamily: 'Gilroy-Bold',
-            fontSize: 18 * width / 375,
-            color: '#FFFFFF',
-            marginTop: 8 * width / 375,
-            paddingHorizontal: 34 * width / 375,
 
-          }}
-          >
-            {moment().format('LT - ddd, DD MMM yyyy')}
-          </Text>
+          <Timer />
+
           <Text style={{
             fontFamily: 'Gilroy-Bold',
             fontSize: 96 * width / 375,
