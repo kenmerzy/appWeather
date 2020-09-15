@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import {
   View, Text, Dimensions,
-  Image, SafeAreaView, StyleSheet,
+  Image, SafeAreaView, StyleSheet, RefreshControl,
 } from 'react-native'
 import axios from 'axios'
 import moment from 'moment'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-community/async-storage'
 import {
-  iconSearch, iconSetting, backgroundSnowing, iconSnowing,
+  iconSearch, iconSetting, backgroundSnowing,
 } from '../../assets/images'
 
 const { width, height } = Dimensions.get('window')
 
 const MainScreen = (props) => {
-  console.tron.log({ navigation: props.navigation })
-  const { navigation } = props
-  const [weather, setWeather] = useState(false)
-
+  // eslint-disable-next-line react/destructuring-assignment
+  console.tron.log({
+    // eslint-disable-next-line react/destructuring-assignment
+    navigation: props.navigation,
+    route: props.route,
+  })
+  const { navigation, route } = props
+  const [weather, setWeather] = useState(route?.params?.weather)
+  const [isLoadingData, setIsLoadingData] = useState(false)
   const navigateToSettingScreen = () => {
     navigation.navigate('SettingScreen')
   }
@@ -29,10 +35,19 @@ const MainScreen = (props) => {
   const getWeatherByLocation = async () => {
     const respone = await axios.get('http://api.openweathermap.org/data/2.5/weather?q=Ho%20Chi%20Minh&appid=e38051523c69fa565854d465504a1ab3&units=metric')
 
-    const timeout = setTimeout(() => {
-      setWeather(respone.data)
-      clearTimeout(timeout)
-    }, 2000)
+    setWeather(respone.data)
+    AsyncStorage.setItem('weather', JSON.stringify(respone.data))
+  }
+
+  if (!weather) {
+    return (<View style={{
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+    >
+      <Text>Loading...</Text>
+    </View>)
   }
 
   return (
@@ -41,7 +56,6 @@ const MainScreen = (props) => {
       <Image
         source={backgroundSnowing}
         style={styles.background}
-
       />
 
       <SafeAreaView />
@@ -85,6 +99,18 @@ const MainScreen = (props) => {
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl
+          refreshing={isLoadingData}
+          onRefresh={async () => {
+            setIsLoadingData(true)
+            await getWeatherByLocation()
+            const timeout = setTimeout(() => {
+              setIsLoadingData(false)
+              clearTimeout(timeout)
+            }, 2000)
+          }}
+          tintColor="#FFFFFF"
+        />}
       >
         <View style={{
           paddingBottom: 52 * width / 375,
@@ -100,7 +126,7 @@ const MainScreen = (props) => {
 
           }}
           >
-            Ho Chi Minh City
+            {`${weather?.name}`}
           </Text>
           <Text style={{
             fontFamily: 'Gilroy-Bold',
@@ -153,16 +179,46 @@ const MainScreen = (props) => {
 
           </View>
           <View
-            style={separator}
+            style={styles.separator}
           />
 
-          <View>
-            <ScrollView>
-              <View>
-
-              </View>
-
-            </ScrollView>
+          <View style={{
+            flexDirection: 'row',
+            paddingHorizontal: 44 / 375 * width,
+            justifyContent: 'space-between',
+            marginTop: 40 / 375 * width,
+          }}
+          >
+            {weather?.wind?.speed ? <View>
+              <Text style={{ fontFamily: 'Gilroy-Bold', fontSize: 24 / 375 * width, color: 'rgba(255,255,255,0.7)' }}>Wind</Text>
+              <Text style={{
+                fontFamily: 'Gilroy-Bold', fontSize: 36 / 375 * width, color: '#fff', marginVertical: 10 / 375 * width,
+              }}
+              >
+                {weather?.wind?.speed}
+              </Text>
+              <Text style={{ fontFamily: 'Gilroy-Bold', fontSize: 24 / 375 * width, color: '#fff' }}>km/h</Text>
+            </View> : null}
+            {weather?.clouds?.all ? <View>
+              <Text style={{ fontFamily: 'Gilroy-Bold', fontSize: 24 / 375 * width, color: 'rgba(255,255,255,0.7)' }}>Cloud</Text>
+              <Text style={{
+                fontFamily: 'Gilroy-Bold', fontSize: 36 / 375 * width, color: '#fff', marginVertical: 10 / 375 * width,
+              }}
+              >
+                {weather?.clouds?.all}
+              </Text>
+              <Text style={{ fontFamily: 'Gilroy-Bold', fontSize: 24 / 375 * width, color: '#fff' }}>%</Text>
+            </View> : null}
+            {weather?.main?.humidity ? <View>
+              <Text style={{ fontFamily: 'Gilroy-Bold', fontSize: 24 / 375 * width, color: 'rgba(255,255,255,0.7)' }}>Humidity</Text>
+              <Text style={{
+                fontFamily: 'Gilroy-Bold', fontSize: 36 / 375 * width, color: '#fff', marginVertical: 10 / 375 * width,
+              }}
+              >
+                {weather?.main?.humidity}
+              </Text>
+              <Text style={{ fontFamily: 'Gilroy-Bold', fontSize: 24 / 375 * width, color: '#fff' }}>%</Text>
+            </View> : null}
           </View>
         </View>
       </ScrollView>
@@ -186,6 +242,6 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
     marginHorizontal: 28 * width / 375,
     backgroundColor: '#998383',
-    marginTop: 52 * width / 375
-  }
+    marginTop: 52 * width / 375,
+  },
 })
