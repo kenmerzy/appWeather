@@ -7,6 +7,7 @@ import axios from 'axios'
 import moment from 'moment'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
+
 import {
   iconSearch, iconSetting, backgroundSnowing,
 } from '../../assets/images'

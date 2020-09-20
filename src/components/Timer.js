@@ -13,7 +13,7 @@ const Timer = ({
       setDem(dem + 1)
     }, 1000)
     return () => { clearInterval(inter) }
-  }, [])
+  }, [moment().second()])
 
   return (
     <Text style={{
