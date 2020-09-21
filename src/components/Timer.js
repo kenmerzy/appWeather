@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, Dimensions } from 'react-native'
+import { Text, Dimensions } from 'react-native'
 import moment from 'moment'
 
 const { width } = Dimensions.get('window')
@@ -13,7 +13,7 @@ const Timer = ({
       setDem(dem + 1)
     }, 1000)
     return () => { clearInterval(inter) }
-  }, [moment().second()])
+  }, [dem])
 
   return (
     <Text style={{
@@ -25,7 +25,7 @@ const Timer = ({
 
     }}
     >
-      {moment().format('LTS - ddd, DD MMM yyyy')}
+      {moment().format('LT - ddd, DD MMM yyyy')}
     </Text>
   )
 }

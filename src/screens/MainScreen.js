@@ -8,23 +8,22 @@ import moment from 'moment'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
 
+import { useDispatch, useSelector } from 'react-redux'
 import {
   iconSearch, iconSetting, backgroundSnowing,
 } from '../../assets/images'
 import Timer from '../components/Timer'
+import { weatherActions } from '../redux/actions'
 
 const { width, height } = Dimensions.get('window')
 
 const MainScreen = (props) => {
   // eslint-disable-next-line react/destructuring-assignment
-  console.tron.log({
-    // eslint-disable-next-line react/destructuring-assignment
-    navigation: props.navigation,
-    route: props.route,
-  })
+
   const { navigation, route } = props
-  const [weather, setWeather] = useState(route?.params?.weather)
+  const weather = useSelector((state) => state.weather)
   const [isLoadingData, setIsLoadingData] = useState(false)
+  const dispatch = useDispatch()
   const navigateToSettingScreen = () => {
     navigation.navigate('SettingScreen')
   }
@@ -35,10 +34,14 @@ const MainScreen = (props) => {
   }, [])
 
   const getWeatherByLocation = async () => {
-    const respone = await axios.get('http://api.openweathermap.org/data/2.5/weather?q=Ho%20Chi%20Minh&appid=e38051523c69fa565854d465504a1ab3&units=metric')
-
-    setWeather(respone.data)
-    AsyncStorage.setItem('weather', JSON.stringify(respone.data))
+    dispatch(weatherActions.getWeather('Ho chi minh'))
+    console.tron.log({
+      // eslint-disable-next-line react/destructuring-assignment
+      navigation: props.navigation,
+      // eslint-disable-next-line react/destructuring-assignment
+      route: props.route,
+      weather,
+    })
   }
 
   if (!weather) {
@@ -154,7 +157,7 @@ const MainScreen = (props) => {
           }}
           >
             <Image
-              source={{ uri: `http://openweathermap.org/img/wn/${weather?.weather[0]?.icon}@2x.png` }}
+              source={{ uri: `http://openweathermap.org/img/wn/${weather?.weather ? weather?.weather[0]?.icon : ''}@2x.png` }}
               style={{
                 width: 34 * width / 375,
                 height: 38 * width / 375,
@@ -168,7 +171,7 @@ const MainScreen = (props) => {
               marginLeft: 6 * width / 375,
             }}
             >
-              {`${weather?.weather[0]?.main}`}
+              {`${weather?.weather ? weather?.weather[0]?.main : null}`}
             </Text>
 
           </View>

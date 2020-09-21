@@ -1,3 +1,3 @@
-import * as weatherAtions from './weather'
+import * as weatherActions from './weather'
 
-export { weatherAtions }
+export { weatherActions }
