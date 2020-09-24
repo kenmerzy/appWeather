@@ -4,6 +4,7 @@ import {
   Image, SafeAreaView, StyleSheet, RefreshControl,
 } from 'react-native'
 import axios from 'axios'
+import SplashScreen from 'react-native-splash-screen'
 import moment from 'moment'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -34,7 +35,7 @@ const MainScreen = (props) => {
   }, [])
 
   const getWeatherByLocation = async () => {
-    dispatch(weatherActions.getWeather('Ho chi minh'))
+    dispatch(weatherActions.getWeather('Ho Chi Minh'))
     console.tron.log({
       // eslint-disable-next-line react/destructuring-assignment
       navigation: props.navigation,
