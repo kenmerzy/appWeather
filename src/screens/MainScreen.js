@@ -37,14 +37,6 @@ const MainScreen = (props) => {
   const getWeatherByLocation = async () => {
     dispatch(weatherActions.getWeather('Ho Chi Minh'))
     SplashScreen.hide()
-
-    console.tron.log({
-      // eslint-disable-next-line react/destructuring-assignment
-      navigation: props.navigation,
-      // eslint-disable-next-line react/destructuring-assignment
-      route: props.route,
-      weather,
-    })
   }
 
   if (!weather) {

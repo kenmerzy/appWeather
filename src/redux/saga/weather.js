@@ -7,11 +7,6 @@ import { weatherActions } from '../actions'
 
 function* getWeatherSaga(action) {
   try {
-    console.log('================================================')
-    console.log('action', action)
-    console.log('payload', action.payload)
-    console.log('data', action.payload.data)
-    console.log('================================================')
     const weather = yield call(
       () => axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${action.payload}&appid=e38051523c69fa565854d465504a1ab3&units=metric`)
     )
